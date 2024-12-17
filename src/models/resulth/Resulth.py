@@ -14,7 +14,19 @@ class Resulth:
                 "id": os_id
             }
 
-            print(url)
+            response = requests.get(url, params)
+            return response
+        except Exception as e:
+            print(f'Error: {e}')
+            return e
+        
+    def get_ocorrencia(self, os_id):
+        try:
+            url = f'{self.url}/ocorrencia'
+
+            params = {
+                "id": os_id
+            }
 
             response = requests.get(url, params)
             return response
@@ -22,4 +34,45 @@ class Resulth:
             print(f'Error: {e}')
             return e
         
+    def get_log(self, log_id):
+        try:
+            url = f'{self.url}/log'
+
+            params = {
+                "id": log_id
+            }
+
+            response = requests.get(url, params)
+            return response
+        except Exception as e:
+            print(f'Error: {e}')
+            return e    
         
+
+    def get_causa(self, os_id):
+        try:
+            url = f'{self.url}/causa'
+
+            params = {
+                "id": os_id
+            }
+
+            response = requests.get(url, params)
+            return response
+        except Exception as e:
+            print(f'Error: {e}')
+            return e
+        
+    def get_defeito(self, os_id):
+        try:
+            url = f'{self.url}/causa'
+
+            params = {
+                "id": os_id
+            }
+
+            response = requests.get(url, params)
+            return response
+        except Exception as e:
+            print(f'Error: {e}')
+            return e
