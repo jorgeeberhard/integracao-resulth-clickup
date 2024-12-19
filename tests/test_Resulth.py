@@ -32,3 +32,9 @@ class TestResulth(unittest.TestCase):
         response = resulth.get_defeito(140000)
 
         self.assertEqual(response.status_code, 200)
+
+    def test_get_equipamento(self):
+        resulth = Resulth()
+        response = resulth.get_equipamento(153000)
+
+        self.assertEqual(response.status_code, 200)

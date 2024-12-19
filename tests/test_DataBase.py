@@ -3,12 +3,13 @@ from src.models.database import DataBase
 
 class TestDataBase(unittest.TestCase):
 
-    def test_query(self):
+    def test_select(self):
         database = DataBase()
 
-        query_object = {
-            "sql": "SELECT 1"
+        query = {
+            "sql": "SELECT (?)",
+            "params": ["1"]
         }
 
-        query_results = database.query(query_object)
+        query_results = database.query(query)
         self.assertEqual(query_results[0].get("1"), 1)
