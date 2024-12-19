@@ -65,7 +65,21 @@ class Resulth:
         
     def get_defeito(self, os_id):
         try:
-            url = f'{self.url}/causa'
+            url = f'{self.url}/defeito'
+
+            params = {
+                "id": os_id
+            }
+
+            response = requests.get(url, params)
+            return response
+        except Exception as e:
+            print(f'Error: {e}')
+            return e
+        
+    def get_equipamento(self, os_id):
+        try:
+            url = f'{self.url}/equipamento'
 
             params = {
                 "id": os_id
