@@ -1,12 +1,14 @@
 from src.models.clickup import Clickup
 from src.models.database import DataBase
 from operator import itemgetter
-import json, time
+import json, time, threading, logging
+
+logging.basicConfig(level=logging.INFO)
 
 class TaskManager:
     def __init__(self):
-        self.__create_table()
         self.database = DataBase()
+        self.__create_table()
 
     def __create_table(self):
         query = {
@@ -35,7 +37,7 @@ class TaskManager:
 
 
         self.database.query(sql)
-        print(f'Task added: {class_name}.{method_name}({params})')
+        logging.info(f'Task added: {class_name}.{method_name}({params})')
 
     def process_tasks(self):
         while True:
@@ -47,14 +49,14 @@ class TaskManager:
 
             response = self.database.query(sql)
             if not len(response) > 0:
-                print("No task in the queue. Waiting...")
+                logging.info("No task in the queue. Waiting...")
                 time.sleep(5)
                 continue
             
             task_id, class_name, method_name, params, status, created_at = itemgetter("id", "class_name", "method_name", "params", "status","created_at")(response[0])
 
             try:
-                print(f'Processing task {task_id}: {class_name}.{method_name}({params})')
+                logging.info(f'Processing task {task_id}: {class_name}.{method_name}({params})')
 
                 # Instanciate the class and starts the method
                 class_instance = globals()[class_name]()
@@ -68,9 +70,9 @@ class TaskManager:
                     "params": [task_id]
                 }
                 self.database.query(query)
-                print(f'Task {task_id} completed.\n')
+                logging.info(f'Task {task_id} completed.\n')
             except Exception as e:
-                print(f'Error processing task {task_id}: {e}')
+                logging.error(f'Error processing task {task_id}: {e}')
 
                 # Mark the task as failed
                 query = {
@@ -78,3 +80,12 @@ class TaskManager:
                     "params": [task_id]
                 }
                 self.database.query(query)
+
+    def start(self):
+
+        # Create process_tasks thread
+        process_task_thread = threading.Thread(target=self.process_tasks)
+
+        # Start process_tasks thread
+        process_task_thread.start()
+        return process_task_thread
